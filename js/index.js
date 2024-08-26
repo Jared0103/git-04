@@ -1,53 +1,62 @@
-console.log('Saludos desde terminal')
+const cards = document.querySelector('#card-poke');
+const templateCard = document.querySelector('#template-card').content;
 
-// var, let, const
-var a = 10
-var a = '10 '
+let prev, next;
 
-let b = 11
-// let b = '11'  no puedo redefinir
+document.addEventListener('DOMContentLoaded', () => {
+    fetchData();
+    
+    // Asignar eventos a los botones
+    document.querySelector('#btn-next').addEventListener('click', () => {
+        if (next) fetchData(next);
+    });
 
-const PI = 3.1416
-//PI = 3.1417
+    document.querySelector('#btn-prev').addEventListener('click', () => {
+        if (prev) fetchData(prev);
+    });
+});
 
-console.log("🚀 ~ concatenar =>" , a + b)
-
-/*
-let nombre = prompt('Cual es tu nombre?')
-console.log("🚀 ~ nombre:", nombre)
-console.log("🚀 ~ typeof:", typeof nombre)
-
-let edad = prompt('Cual es tu edad?')
-console.log("🚀 ~ nombre:", parseInt(edad))
-console.log("🚀 ~ typeof:", typeof parseInt(edad))
-*/
-
-console.log("🚀 ~ document:", document)
-console.log("🚀 ~ head:", document.head)
-console.log("🚀 ~ body:", document.body)
-console.log("🚀 ~ title:", document.title)
-console.log("🚀 ~ domain:", document.domain)
-
-document.title = 'Cambiado desde JS'
-
-/*
-getElemetById('titulo')
-getElemetByClassName('miClase')
-getElementByTabName('etiqueta')
-getElementByTabName('div')
-
-querySelector(selector) '#id'
-querySelector(selector) '.clase'
-querySelector(selector) 'div'
-
-querySelectorAll(selector)
-
-createElement('elemento')
-createDocumentFragment('')
-*/
-
-document.addEventListener('DOMContentLoaded'), () => {
-    console.log('@@@ dom=> carga todo')
-    console.log(document.querySelector('h1'))
+const fetchData = async (link) => {
+    try {
+        loadingData(true);
+        const url = link ? link : 'https://rickandmortyapi.com/api/character';
+        const res = await fetch(url);
+        const personajes = await res.json();
+        next = personajes.info.next;
+        prev = personajes.info.prev;
+        pintarCards(personajes.results);
+        console.log("🚀 ~ fetchData ~ next:", next);
+        console.log("🚀 ~ fetchData ~ prev:", prev);
+    } catch (error) {
+        console.log("🚀 ~ error ~ : ", error);
+    } finally {
+        loadingData(false);
+    }
 }
 
+const pintarCards = (Characters) => {
+    const fragment = document.createDocumentFragment();
+    cards.textContent = '';
+    Characters.forEach((item) => {
+        const clone = templateCard.cloneNode(true);
+        clone.querySelector('h5').textContent = item.name;
+        clone.querySelector('p').textContent = item.species;
+        clone.querySelector('img').setAttribute('src', item.image);
+        
+        fragment.appendChild(clone);
+    });
+    setTimeout(() => {
+        cards.appendChild(fragment);
+    }, 2000);
+}
+
+const loadingData = (estado) => {
+    const loading = document.querySelector('#loading');
+    if (loading) {
+        if (estado) {
+            loading.classList.remove('d-none');
+        } else {
+            loading.classList.add('d-none');
+        }
+    }
+}
