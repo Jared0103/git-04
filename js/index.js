@@ -1,53 +1,104 @@
-console.log('Saludos desde terminal')
-
-// var, let, const
-var a = 10
-var a = '10 '
-
-let b = 11
-// let b = '11'  no puedo redefinir
-
-const PI = 3.1416
-//PI = 3.1417
-
-console.log("🚀 ~ concatenar =>" , a + b)
+const posts = [
+    {
+        userId: 1,
+        id: 1,
+        title: 'Uno',
+        body: 'Uno'
+    },
+    {
+        userId: 1,
+        id: 2,
+        title: 'Dos',
+        body: 'Dos'
+    },
+    {
+        userId: 1,
+        id: 3,
+        title: 'Tres',
+        body: 'Tres'
+    },
+    {
+        userId: 1,
+        id: 4,
+        title: 'Cuatro',
+        body: 'Cuatro'
+    },
+    {
+        userId: 2,
+        id: 5,
+        title: 'Cinco',
+        body: 'Cinco'
+    },
+    {
+        userId: 3,
+        id: 6,
+        title: 'Seis',
+        body: 'Seis'
+    },
+    {
+        userId: 4,
+        id: 7,
+        title: 'Siete',
+        body: 'Siete'
+    },
+    {
+        userId: 4,
+        id: 8,
+        title: 'Ocho',
+        body: 'Ocho'
+    },
+    {
+        userId: 5,
+        id: 9,
+        title: 'Nueve',
+        body: 'Nueve'
+    },
+    {
+        userId: 5,
+        id: 10,
+        title: 'Diez',
+        body: 'Diez'
+    }
+]
 
 /*
-let nombre = prompt('Cual es tu nombre?')
-console.log("🚀 ~ nombre:", nombre)
-console.log("🚀 ~ typeof:", typeof nombre)
-
-let edad = prompt('Cual es tu edad?')
-console.log("🚀 ~ nombre:", parseInt(edad))
-console.log("🚀 ~ typeof:", typeof parseInt(edad))
-*/
-
-console.log("🚀 ~ document:", document)
-console.log("🚀 ~ head:", document.head)
-console.log("🚀 ~ body:", document.body)
-console.log("🚀 ~ title:", document.title)
-console.log("🚀 ~ domain:", document.domain)
-
-document.title = 'Cambiado desde JS'
-
-/*
-getElemetById('titulo')
-getElemetByClassName('miClase')
-getElementByTabName('etiqueta')
-getElementByTabName('div')
-
-querySelector(selector) '#id'
-querySelector(selector) '.clase'
-querySelector(selector) 'div'
-
-querySelectorAll(selector)
-
-createElement('elemento')
-createDocumentFragment('')
-*/
-
-document.addEventListener('DOMContentLoaded'), () => {
-    console.log('@@@ dom=> carga todo')
-    console.log(document.querySelector('h1'))
+const findPostById = id => {
+    const post = posts.find((item) => item.id === id)
+    return new Promise((resolve, reject) => {
+        
+        if (post) {
+            resolve(post) 
+        } else {
+            reject(`No se encontro el post con id: ${id}`)
+        }
+        
+    post ? resolve(post) : reject(`No se encontro el post con id: ${id}`)
+    })
 }
+
+findPostById(3)
+    .then((post) => console.log('Post => ',post))
+    .catch((error) => console.error('Error => ', error))
+    .finally(() => console.log('Fin de la promesa'))
+*/  
+    
+const findPostById = id => {
+        return new Promise((resolve, reject) => {
+            setTimeout(() => {
+                const post = posts.find((item) => item.id === id)
+                post ? resolve(post) : reject(`No se encontro el post con id: ${id}`)
+            }, 2000);
+        })
+    }
+
+const buscar = async () => {
+    //const post1 = await findPostById(1)
+    //const post2 = await findPostById(2)
+    //const post3 = await findPostById(3)
+    //console.log("🚀 ~ post ~ :", post1, post2 ,post3)
+    const allPost = await Promise.all([findPostById(3)], [findPostById(2)], [findPostById(9)])
+    console.log("🚀 ~ allPost ~ :", allPost)
+}
+
+buscar ()
 
